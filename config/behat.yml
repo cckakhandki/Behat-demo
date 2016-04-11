@@ -1,0 +1,83 @@
+default:
+  autoload:
+    '': %paths.base%/../features/bootstrap
+  extensions:
+    Behat\MinkExtension:
+       goutte: ~
+       default_session: selenium2
+       browser_name: firefox
+       selenium2:
+          capabilities:
+             browser:      firefox
+             browserName:  firefox
+          wd_host:        'http://127.0.0.1:4444/wd/hub'
+       base_url:         'http://newtours.demoaut.com'
+       
+    #jarnaiz\JUnitFormatter\JUnitFormatterExtension:
+       #filename: report.xml
+       #outputDir: %paths.base%/../reports/junit
+    
+    emuse\BehatHTMLFormatter\BehatHTMLFormatterExtension:
+      name: html
+      renderer: Behat2
+      #Behat2,Twig,Minimal
+      file_name: report
+      print_args: true
+      print_outp: true
+      loop_break: true
+      screenshot_folder: Screenshots
+      
+  formatters:	
+    pretty: true
+    junit: 
+      output_path: %paths.base%/../reports/junit
+    html: 
+      output_path: %paths.base%/../reports
+  suites:
+    default:
+        paths: 
+           - %paths.base%/../features
+        contexts: 
+           - FeatureContext
+           - Drupal\DrupalExtension\Context\MinkContext
+    test1:
+        paths:
+           - %paths.base%/../features/test1
+        contexts: 
+           - FeatureContext
+           - Drupal\DrupalExtension\Context\MinkContext
+    newtours:
+        paths:
+           - %paths.base%/../features/newtours
+        contexts: 
+           - NewToursContext
+           - Drupal\DrupalExtension\Context\MinkContext
+           - emuse\BehatHTMLFormatter\Context\BehatScreenshotContext:
+               screenshot_path: %paths.base%/../reports/Screenshots
+        filters:
+          #tags: @test1
+           
+firefox:
+  extensions:
+    Behat\MinkExtension:
+      browser_name: firefox
+      #base_url:         'http://www.google.co.in'
+   
+chrome:
+  extensions:
+    Behat\MinkExtension:
+      browser_name: chrome
+      selenium2:
+        capabilities:
+          browser: chrome
+          chrome:
+             switches: ["--start-maximized"]
+      #base_url:         'http://newtours.demoaut.com'
+
+ie:
+  extensions:
+    Behat\MinkExtension:
+      browser_name: ie
+      selenium2:
+        capabilities: {"browser":"ie","version":"11"}
+      #base_url:         'http://www.google.co.in'
