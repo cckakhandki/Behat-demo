@@ -4,16 +4,10 @@ namespace emuse\BehatHTMLFormatter\Context;
 
 use Behat\Behat\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use emuse\BehatHTMLFormatter\Classes\Scenario;
-use emuse\BehatHTMLFormatter\Classes\Step;
-
 
 /**
  * Class BehatFormatterContext
- *
- * 
  */
 class BehatScreenshotContext implements SnippetAcceptingContext {
     private $currentScenario;
@@ -27,11 +21,9 @@ class BehatScreenshotContext implements SnippetAcceptingContext {
     private $minkContext;
     
     /**
-     * 
      * @param string $screenshot_path
      */
     public function __construct($screenshot_path) {
-    	//var_dump($params);
     	$this->output_path = $screenshot_path;
     }
     

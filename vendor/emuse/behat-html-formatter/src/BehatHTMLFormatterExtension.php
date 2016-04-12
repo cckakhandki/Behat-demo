@@ -57,7 +57,7 @@ class BehatHTMLFormatterExtension implements ExtensionInterface {
     $builder->children()->scalarNode("print_args")->defaultValue("false");
     $builder->children()->scalarNode("print_outp")->defaultValue("false");
     $builder->children()->scalarNode("loop_break")->defaultValue("false");
-    $builder->children()->scalarNode("screenshot_folder")->defaultValue('%paths.base%' . DIRECTORY_SEPARATOR . ' reports' . DIRECTORY_SEPARATOR . 'screenshots' . DIRECTORY_SEPARATOR);
+    $builder->children()->scalarNode("screenshot_folder")->defaultValue('Screenshots');
     $builder->children()->scalarNode('output')->defaultValue('.');
   }
 
