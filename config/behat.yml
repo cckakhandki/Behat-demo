@@ -40,6 +40,8 @@ default:
         contexts: 
            - FeatureContext
            - Drupal\DrupalExtension\Context\MinkContext
+           - emuse\BehatHTMLFormatter\Context\ScreenshotContext:
+               screenshot_path: %paths.base%/../reports/Screenshots
     test1:
         paths:
            - %paths.base%/../features/test1
@@ -52,7 +54,7 @@ default:
         contexts: 
            - NewToursContext
            - Drupal\DrupalExtension\Context\MinkContext
-           - emuse\BehatHTMLFormatter\Context\BehatScreenshotContext:
+           - emuse\BehatHTMLFormatter\Context\ScreenshotContext:
                screenshot_path: %paths.base%/../reports/Screenshots
         filters:
           #tags: @test1
@@ -61,7 +63,16 @@ firefox:
   extensions:
     Behat\MinkExtension:
       browser_name: firefox
-      #base_url:         'http://www.google.co.in'
+      base_url: 'http://localhost:8000'
+    emuse\BehatHTMLFormatter\BehatHTMLFormatterExtension:
+      name: html
+      renderer: Behat2
+      #Behat2,Twig,Minimal
+      file_name: report2
+      print_args: true
+      print_outp: true
+      loop_break: true
+      screenshot_folder: reports/Screenshots
    
 chrome:
   extensions:
@@ -72,7 +83,8 @@ chrome:
           browser: chrome
           chrome:
              switches: ["--start-maximized"]
-      #base_url:         'http://newtours.demoaut.com'
+      base_url: 'http://localhost:8000'
+    emuse\BehatHTMLFormatter\BehatHTMLFormatterExtension: 
 
 ie:
   extensions:

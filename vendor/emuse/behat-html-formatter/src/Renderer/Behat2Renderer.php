@@ -6,8 +6,7 @@
 
 namespace emuse\BehatHTMLFormatter\Renderer;
 
-use Behat\Behat\Hook\Call\AfterStep;
-use Behat\Behat\Hook\Call\BeforeScenario;
+use Behat\Gherkin\Node\TableNode;
 
 class Behat2Renderer implements RendererInterface {
 
@@ -305,6 +304,35 @@ class Behat2Renderer implements RendererInterface {
     }
 
     /**
+     * Renders TableNode arguments.
+     *
+     * @param TableNode $table
+     * @return string  : HTML generated
+     */
+    public function renderTableNode(TableNode $table){
+    	$arguments = '<table class="argument"> <thead>';
+    	$header = $table->getRow(0);
+		$arguments .= $this->preintTableRows($header);
+    	
+    	$arguments .= '</thead><tbody>';
+    	foreach ($table->getHash() as $row) {
+    		$arguments .= $this->preintTableRows($row);
+    	}
+    	
+    	$arguments .= '</tbody></table>';
+    	return $arguments;
+    }
+    
+    function preintTableRows($row){
+    	$return = '<tr class="row">';
+    	foreach ($row as $column) {
+    		$return .= '<td>' . htmlspecialchars($column) . '</td>';
+    	}
+    	$return .= '</tr>';
+    	return $return;
+    }
+
+    /**
      * Renders after a step.
      * @param object : BehatHTMLFormatter object
      * @return string  : HTML generated
@@ -315,9 +343,9 @@ class Behat2Renderer implements RendererInterface {
         $scenario = $obj->getCurrentScenario();
 
         $steps = $scenario->getSteps();
-        $step = end($steps); //needed because of strict standards
+        $step = end($steps); // Needed because of strict standards.
 
-        //path displayed only if available (it's not available in undefined steps)
+        // Path displayed only if available (it's not available in undefined steps)
         $strPath = '';
         if($step->getDefinition() !== null) {
             $strPath = $step->getDefinition()->getPath();
@@ -337,13 +365,28 @@ class Behat2Renderer implements RendererInterface {
             $stepResultClass = 'pending';
         }
 
+        $arguments ='';
+        $argument = $step->getArguments();
+        $argumentType = $step->getArgumentType();
+
+        if($argumentType == "PyString"){
+        	$arguments = '<pre class="argument">' . htmlspecialchars($argument) . '</pre>';
+        }
+
+        if ($argumentType == 'Table'){
+			$arguments =  '<pre class="argument">' . $this->renderTableNode($argument) . '</pre>';
+			
+        }
+
         $print = '
                     <li class="'.$stepResultClass.'">
                         <div class="step">
                             <span class="keyword">'.$step->getKeyWord().' </span>
                             <span class="text">'.$step->getText().' </span>
                             <span class="path">'.$strPath.'</span>
+							<br>' . $arguments . '
                         </div>';
+
         $exception = $step->getException();
         if(!empty($exception)) {
         	$dir = DIRECTORY_SEPARATOR;
@@ -351,7 +394,7 @@ class Behat2Renderer implements RendererInterface {
         	$screenshotName = $step->getScreenshotName();
 
         	$fullScreenshotPath =  realpath('.') . $dir . $screnshotFolder . $dir . $screenshotName;
-            $relativeScreenshotPath = substr($screnshotFolder, strpos($screnshotFolder, $dir)+1, 
+            $relativeScreenshotPath = substr($screnshotFolder, strpos($screnshotFolder, $dir)+1,
             		strlen($screnshotFolder)) . $dir . $screenshotName;
 
             $print .= '
@@ -490,8 +533,8 @@ class Behat2Renderer implements RendererInterface {
                 #behat .scenario > ol li .argument,
                 #behat .scenario .examples > ol li .argument {
                     margin:10px 20px;
-                    font-size:16px;
-                    overflow:hidden;
+                    font-size:14px;
+                    overflow:auto;
                 }
                 #behat .scenario > ol li table.argument,
                 #behat .scenario .examples > ol li table.argument {
@@ -553,7 +596,7 @@ class Behat2Renderer implements RendererInterface {
                     font-size:12px;
                     line-height:18px;
                     color:#000;
-                    overflow:hidden;
+                    overflow:auto;
                     margin-left:20px;
                     padding:15px;
                     border-left:2px solid #C20000;

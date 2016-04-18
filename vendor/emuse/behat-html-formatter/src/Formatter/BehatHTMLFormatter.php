@@ -2,8 +2,6 @@
 
 namespace emuse\BehatHTMLFormatter\Formatter;
 
-use Behat\Behat\Hook\Call\BeforeScenario;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Behat\EventDispatcher\Event\AfterFeatureTested;
 use Behat\Behat\EventDispatcher\Event\AfterOutlineTested;
 use Behat\Behat\EventDispatcher\Event\AfterScenarioTested;
@@ -159,14 +157,14 @@ class BehatHTMLFormatter implements Formatter {
      * @var Step[]
      */
     private $skippedSteps;
-    
+
     /**
      * @param String $screenshot_folder
      */
     private $screenshot_folder;
-    
+
     /**
-     * 
+     *
      * @var String $screenshotName
      */
     private $screenshotName;
@@ -510,7 +508,7 @@ class BehatHTMLFormatter implements Formatter {
         $print = $this->renderer->renderBeforeScenario($this);
         $this->printer->writeln($print);
     }
-    
+
     /**
      * @param AfterScenarioTested $event
      */
@@ -525,7 +523,7 @@ class BehatHTMLFormatter implements Formatter {
             $this->failedScenarios[] = $this->currentScenario;
             $this->currentFeature->addFailedScenario();
         }
-        
+
         $this->currentScenario->setLoopCount(1);
         $this->currentScenario->setPassed($event->getTestResult()->isPassed());
         $this->currentFeature->addScenario($this->currentScenario);
@@ -542,9 +540,9 @@ class BehatHTMLFormatter implements Formatter {
         $scenario = new Scenario();
         $scenario->setName($event->getOutline()->getTitle());
         $scenario->setTags($event->getOutline()->getTags());
-        $scenario->setLine($event->getOutline()->getLine());        
+        $scenario->setLine($event->getOutline()->getLine());
         $this->currentScenario = $scenario;
-        
+
         $print = $this->renderer->renderBeforeOutline($this);
         $this->printer->writeln($print);
     }
@@ -588,23 +586,43 @@ class BehatHTMLFormatter implements Formatter {
     {
         $result = $event->getTestResult();
 
-        //$this->dumpObj($event->getStep()->getArguments());
-        /** @var Step $step */
+        /** @var object $step */
         $step = new Step();
         $step->setKeyword($event->getStep()->getKeyword());
         $step->setText($event->getStep()->getText());
         $step->setLine($event->getStep()->getLine());
-        $step->setArguments($event->getStep()->getArguments());
         $step->setResult($result);
         $step->setResultCode($result->getResultCode());
 
+        if ($event->getStep()->hasArguments()){
+
+        	$argumentType = "";
+        	$argument = "";
+        	$TableNode = '\\Behat\\Gherkin\\Node\\TableNode';
+        	$PyStringNode = '\\Behat\\Gherkin\\Node\\PyStringNode';
+
+        	$object = $this->getObject($event->getStep()->getArguments());
+        	$argumentType = $object->getNodeType();
+
+        	if($object instanceof $PyStringNode){
+        		$argument = (string)$object;
+        	}
+
+        	if($object instanceof $TableNode){
+        		$argument = $object;
+        	}
+
+        	$step->setArgumentType($argumentType);
+        	$step->setArguments($argument);
+        }
+
         if($step->getResultCode() == '99'){
         	$environment = $event->getEnvironment();
-        	$screenshotContext = $environment->getContext('emuse\BehatHTMLFormatter\Context\BehatScreenshotContext');
+        	$screenshotContext = $environment->getContext('emuse\BehatHTMLFormatter\Context\ScreenshotContext');
         	$screenshot = $screenshotContext->getScreenshot(true);
         	$step->setScreenshotName($screenshot);
         }
-        
+
         //What is the result of this step ?
         if(is_a($result, 'Behat\Behat\Tester\Result\UndefinedStepResult')) {
             //pending step -> no definition to load
@@ -639,21 +657,12 @@ class BehatHTMLFormatter implements Formatter {
     //</editor-fold>
 
     /**
-     * @param $text
+     * @param $arguments
      */
-    public function printText($text)
-    {
-        file_put_contents('php://stdout', $text);
+    public function getObject($arguments){
+    	foreach ($arguments as $argument => $args){
+    		return $args;
+    	}
     }
 
-    /**
-     * @param $obj
-     */
-    public function dumpObj($obj)
-    {
-        ob_start();
-        var_dump($obj);
-        $result = ob_get_clean();
-        $this->printText($result);
-    }
 }

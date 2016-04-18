@@ -9,9 +9,7 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 /**
  * Class BehatFormatterContext
  */
-class BehatScreenshotContext implements SnippetAcceptingContext {
-    private $currentScenario;
-    protected static $currentSuite;
+class ScreenshotContext implements SnippetAcceptingContext {
     private $output_path;
     private $screenshotName;
     
