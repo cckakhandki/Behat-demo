@@ -2382,7 +2382,7 @@ return array(
     'emuse\\BehatHTMLFormatter\\Classes\\Scenario' => $vendorDir . '/emuse/behat-html-formatter/src/Classes/Scenario.php',
     'emuse\\BehatHTMLFormatter\\Classes\\Step' => $vendorDir . '/emuse/behat-html-formatter/src/Classes/Step.php',
     'emuse\\BehatHTMLFormatter\\Classes\\Suite' => $vendorDir . '/emuse/behat-html-formatter/src/Classes/Suite.php',
-	'emuse\\BehatHTMLFormatter\\Context\\BehatScreenshotContext' => $vendorDir . '/emuse/behat-html-formatter/src/Context/BehatScreenshotContext.php',
+	'emuse\\BehatHTMLFormatter\\Context\\ScreenshotContext' => $vendorDir . '/emuse/behat-html-formatter/src/Context/ScreenshotContext.php',
     'emuse\\BehatHTMLFormatter\\Formatter\\BehatHTMLFormatter' => $vendorDir . '/emuse/behat-html-formatter/src/Formatter/BehatHTMLFormatter.php',
     'emuse\\BehatHTMLFormatter\\Printer\\FileOutputPrinter' => $vendorDir . '/emuse/behat-html-formatter/src/Printer/FileOutputPrinter.php',
     'emuse\\BehatHTMLFormatter\\Renderer\\BaseRenderer' => $vendorDir . '/emuse/behat-html-formatter/src/Renderer/BaseRenderer.php',
