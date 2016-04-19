@@ -595,25 +595,9 @@ class BehatHTMLFormatter implements Formatter {
         $step->setResultCode($result->getResultCode());
 
         if ($event->getStep()->hasArguments()){
-
-        	$argumentType = "";
-        	$argument = "";
-        	$TableNode = '\\Behat\\Gherkin\\Node\\TableNode';
-        	$PyStringNode = '\\Behat\\Gherkin\\Node\\PyStringNode';
-
         	$object = $this->getObject($event->getStep()->getArguments());
-        	$argumentType = $object->getNodeType();
-
-        	if($object instanceof $PyStringNode){
-        		$argument = (string)$object;
-        	}
-
-        	if($object instanceof $TableNode){
-        		$argument = $object;
-        	}
-
-        	$step->setArgumentType($argumentType);
-        	$step->setArguments($argument);
+        	$step->setArgumentType($object->getNodeType());
+        	$step->setArguments($object);
         }
 
         if($step->getResultCode() == '99'){

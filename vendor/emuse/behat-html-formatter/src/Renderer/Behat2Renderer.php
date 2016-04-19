@@ -92,7 +92,7 @@ class Behat2Renderer implements RendererInterface {
         if(count($obj->getPendingSteps()) > 0) {
             foreach($obj->getPendingSteps() as $pendingStep) {
                 $strPendingList .= '
-                    <li>'.$pendingStep->getKeyword().' '.$pendingStep->getText().'</li>';
+                    <li>'.$pendingStep->getKeyword().' '. htmlentities($pendingStep->getText()) .'</li>';
             }
             $strPendingList = '
             <div class="pending">Pending steps :
@@ -323,10 +323,10 @@ class Behat2Renderer implements RendererInterface {
     	return $arguments;
     }
     
-    function preintTableRows($row){
+    public function preintTableRows($row){
     	$return = '<tr class="row">';
     	foreach ($row as $column) {
-    		$return .= '<td>' . htmlspecialchars($column) . '</td>';
+    		$return .= '<td>' . htmlentities($column) . '</td>';
     	}
     	$return .= '</tr>';
     	return $return;
@@ -370,22 +370,22 @@ class Behat2Renderer implements RendererInterface {
         $argumentType = $step->getArgumentType();
 
         if($argumentType == "PyString"){
-        	$arguments = '<pre class="argument">' . htmlspecialchars($argument) . '</pre>';
+        	$arguments = '<br><pre class="argument">' . htmlentities($argument) . '</pre>';
         }
 
         if ($argumentType == 'Table'){
-			$arguments =  '<pre class="argument">' . $this->renderTableNode($argument) . '</pre>';
+			$arguments =  '<br><pre class="argument">' . $this->renderTableNode($argument) . '</pre>';
 			
         }
 
         $print = '
-                    <li class="'.$stepResultClass.'">
-                        <div class="step">
-                            <span class="keyword">'.$step->getKeyWord().' </span>
-                            <span class="text">'.$step->getText().' </span>
-                            <span class="path">'.$strPath.'</span>
-							<br>' . $arguments . '
-                        </div>';
+        		<li class="'.$stepResultClass.'">
+                    <div class="step">
+                        <span class="keyword">'.$step->getKeyWord().' </span>
+                        <span class="text">'. htmlentities($step->getText()) .' </span>
+                        <span class="path">'.$strPath.'</span>'
+						. $arguments . '
+                    </div>';
 
         $exception = $step->getException();
         if(!empty($exception)) {
@@ -398,14 +398,14 @@ class Behat2Renderer implements RendererInterface {
             		strlen($screnshotFolder)) . $dir . $screenshotName;
 
             $print .= '
-                        <pre class="backtrace">'.$step->getException().'</pre>';
+            		<pre class="backtrace">'.$step->getException().'</pre>';
             if(file_exists($fullScreenshotPath))
             {
                 $print .= '<a href="' . $relativeScreenshotPath . '" target="_blank">Screenshot</a>';
             }
         }
         $print .= '
-                    </li>';
+        		</li>';
 
         return $print;
     }
