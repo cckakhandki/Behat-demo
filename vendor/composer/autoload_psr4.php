@@ -6,7 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'emuse\\BehatHTMLFormatter\\' => array($vendorDir . '/emuse/behat-html-formatter/src'),
+    'src\\' => array($baseDir . '/src/FeatureContexts'),
+    'cckakhandki\\BehatHTMLFormatter\\' => array($vendorDir . '/cckakhandki/behat-html-formatter/src'),
     'Symfony\\Polyfill\\Util\\' => array($vendorDir . '/symfony/polyfill-util'),
     'Symfony\\Polyfill\\Php70\\' => array($vendorDir . '/symfony/polyfill-php70'),
     'Symfony\\Polyfill\\Php56\\' => array($vendorDir . '/symfony/polyfill-php56'),
@@ -41,6 +42,7 @@ return array(
     'Goutte\\' => array($vendorDir . '/fabpot/goutte/Goutte'),
     'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
     'Doctrine\\Common\\Cache\\' => array($vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache'),
+    'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
     'Behat\\Mink\\Driver\\' => array($vendorDir . '/behat/mink-selenium2-driver/src', $vendorDir . '/behat/mink-browserkit-driver/src', $vendorDir . '/behat/mink-goutte-driver/src'),
     'Behat\\Mink\\' => array($vendorDir . '/behat/mink/src'),
 );

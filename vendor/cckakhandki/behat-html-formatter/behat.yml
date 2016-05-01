@@ -1,0 +1,15 @@
+default:
+    formatters:
+        html:
+            output_path: %paths.base%/../Report
+        pretty: ~
+
+    extensions:
+        cckakhandki\BehatHTMLFormatter\BehatHTMLFormatterExtension:
+            name: html
+            renderer: Twig
+            file_name: index
+            print_args: true
+            print_outp: true
+            loop_break: true
+            screenshot_folder: Reports/screenshot_folder

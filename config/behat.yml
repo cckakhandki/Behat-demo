@@ -1,6 +1,4 @@
 default:
-  autoload:
-    '': %paths.base%/../features/bootstrap
   extensions:
     Behat\MinkExtension:
        goutte: ~
@@ -12,62 +10,54 @@ default:
              browserName:  firefox
           wd_host:        'http://127.0.0.1:4444/wd/hub'
        base_url:         'http://newtours.demoaut.com'
-       
-    #jarnaiz\JUnitFormatter\JUnitFormatterExtension:
-       #filename: report.xml
-       #outputDir: %paths.base%/../reports/junit
     
-    emuse\BehatHTMLFormatter\BehatHTMLFormatterExtension:
+    cckakhandki\BehatHTMLFormatter\BehatHTMLFormatterExtension:
       name: html
       renderer: Behat2
-      #Behat2,Twig,Minimal
       file_name: report
       print_args: true
       print_outp: true
       loop_break: true
       screenshot_folder: reports/Screenshots
-      
-  formatters:	
+  formatters: 
     pretty: true
     junit: 
       output_path: %paths.base%/../reports/junit
     html: 
       output_path: %paths.base%/../reports
+      
   suites:
     default:
         paths: 
            - %paths.base%/../features
         contexts: 
-           - FeatureContext
+           - src\FeatureContext
            - Drupal\DrupalExtension\Context\MinkContext
-           - emuse\BehatHTMLFormatter\Context\ScreenshotContext:
+           - cckakhandki\BehatHTMLFormatter\Context\ScreenshotContext:
                screenshot_path: %paths.base%/../reports/Screenshots
-    test1:
-        paths:
-           - %paths.base%/../features/test1
-        contexts: 
-           - FeatureContext
-           - Drupal\DrupalExtension\Context\MinkContext
+               print_url: 'yes'
+               text_color: '#000000'
+               x: 100
+               y: 30
+               
     newtours:
         paths:
            - %paths.base%/../features/newtours
-        contexts: 
-           - NewToursContext
-           - Drupal\DrupalExtension\Context\MinkContext
-           - emuse\BehatHTMLFormatter\Context\ScreenshotContext:
-               screenshot_path: %paths.base%/../reports/Screenshots
-        filters:
-          #tags: @test1
-           
+        contexts:
+          - src\FeatureContext
+          - src\Newtours\NewToursContext
+          - Drupal\DrupalExtension\Context\MinkContext
+          - cckakhandki\BehatHTMLFormatter\Context\ScreenshotContext:
+              screenshot_path: %paths.base%/../reports/Screenshots
+
 firefox:
   extensions:
     Behat\MinkExtension:
       browser_name: firefox
       base_url: 'http://localhost:8000'
-    emuse\BehatHTMLFormatter\BehatHTMLFormatterExtension:
+    cckakhandki\BehatHTMLFormatter\BehatHTMLFormatterExtension:
       name: html
       renderer: Behat2
-      #Behat2,Twig,Minimal
       file_name: report2
       print_args: true
       print_outp: true
@@ -84,7 +74,6 @@ chrome:
           chrome:
              switches: ["--start-maximized"]
       base_url: 'http://localhost:8000'
-    emuse\BehatHTMLFormatter\BehatHTMLFormatterExtension: 
 
 ie:
   extensions:
