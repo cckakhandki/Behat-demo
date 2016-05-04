@@ -127,6 +127,11 @@ class BehatHTMLFormatter implements Formatter {
      * @var Scenario[]
      */
     private $passedScenarios;
+    
+    /**
+     * @var Scenario[]
+     */
+    private $skippedScenarios;
 
     /**
      * @var Feature[]
@@ -137,6 +142,11 @@ class BehatHTMLFormatter implements Formatter {
      * @var Feature[]
      */
     private $passedFeatures;
+    
+    /**
+     * @var Feature[]
+     */
+    private $skippedFeatures;
 
     /**
      * @var Step[]
@@ -159,7 +169,7 @@ class BehatHTMLFormatter implements Formatter {
     private $skippedSteps;
     
     /**
-     * @param String $screenshot_folder
+     * @param string $screenshot_folder
      */
     private $screenshot_folder;
 
@@ -373,12 +383,22 @@ class BehatHTMLFormatter implements Formatter {
     {
         return $this->passedScenarios;
     }
+    
+    public function getSkippedScenarios()
+    {
+    	return $this->skippedScenarios;
+    }
 
     public function getFailedFeatures()
     {
         return $this->failedFeatures;
     }
-
+    
+    public function getSkippedFeatures()
+    {
+    	return $this->skippedFeatures;
+    }
+    
     public function getPassedFeatures()
     {
         return $this->passedFeatures;
@@ -478,8 +498,10 @@ class BehatHTMLFormatter implements Formatter {
     public function onAfterFeatureTested(AfterFeatureTested $event)
     {
         $this->currentSuite->addFeature($this->currentFeature);
-        if($this->currentFeature->allPassed()) {
+        if($this->currentFeature->getPassedClass() == 'passed') {
             $this->passedFeatures[] = $this->currentFeature;
+        } elseif ($this->currentFeature->getPassedClass() == 'skipped') {
+        	$this->skippedFeatures[] = $this->currentScenario;
         } else {
             $this->failedFeatures[] = $this->currentFeature;
         }
@@ -508,14 +530,18 @@ class BehatHTMLFormatter implements Formatter {
      */
     public function onAfterScenarioTested(AfterScenarioTested $event)
     {
-        $scenarioPassed = $event->getTestResult()->isPassed();
+        //$scenarioPassed = $event->getTestResult()->isPassed();
+        $scenarioCode = $event->getTestResult()->getResultCode();
 
-        if($scenarioPassed) {
+        if($scenarioCode == 0) {
             $this->passedScenarios[] = $this->currentScenario;
             $this->currentFeature->addPassedScenario();
+        } elseif ($scenarioCode == 10){
+        	$this->skippedScenarios[] = $this->currentScenario;
+        	$this->currentFeature->addSkippedScenario();
         } else {
-            $this->failedScenarios[] = $this->currentScenario;
-            $this->currentFeature->addFailedScenario();
+        	$this->failedScenarios[] = $this->currentScenario;
+        	$this->currentFeature->addFailedScenario();
         }
 
         $this->currentScenario->setLoopCount(1);
@@ -535,8 +561,8 @@ class BehatHTMLFormatter implements Formatter {
         $scenario->setName($event->getOutline()->getTitle());
         $scenario->setTags($event->getOutline()->getTags());
         $scenario->setLine($event->getOutline()->getLine());
+        //var_dump($event->getOutline()->getExampleTable()->getColumnsHash());
         $this->currentScenario = $scenario;
-
         $print = $this->renderer->renderBeforeOutline($this);
         $this->printer->writeln($print);
     }
@@ -546,15 +572,21 @@ class BehatHTMLFormatter implements Formatter {
      */
     public function onAfterOutlineTested(AfterOutlineTested $event)
     {
-        $scenarioPassed = $event->getTestResult()->isPassed();
+        //$scenarioPassed = $event->getTestResult()->isPassed();
+        $scenarioCode = $event->getTestResult()->getResultCode();
 
-        if($scenarioPassed) {
+        if($scenarioCode == 0) {
             $this->passedScenarios[] = $this->currentScenario;
             $this->currentFeature->addPassedScenario();
+        } elseif ($scenarioCode == 10){
+        	$this->skippedScenarios[] = $this->currentScenario;
+        	$this->currentFeature->addSkippedScenario();
         } else {
-            $this->failedScenarios[] = $this->currentScenario;
-            $this->currentFeature->addFailedScenario();
+        	$this->failedScenarios[] = $this->currentScenario;
+        	$this->currentFeature->addFailedScenario();
         }
+        
+        //var_dump(sizeof($event->getTestResult()));
 
         $this->currentScenario->setLoopCount(sizeof($event->getTestResult()));
         $this->currentScenario->setPassed($event->getTestResult()->isPassed());

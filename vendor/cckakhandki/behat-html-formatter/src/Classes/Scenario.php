@@ -19,6 +19,7 @@ class Scenario
     private $line;
     private $tags;
     private $loopCount;
+    private $scenarioPath;
 
     /**
      * @var bool
@@ -61,6 +62,7 @@ class Scenario
     {
         $this->loopCount = $loopCount;
     }
+    
     /**
      * @return mixed
      */
@@ -76,7 +78,7 @@ class Scenario
     {
         $this->line = $line;
     }
-
+    
     /**
      * @return mixed
      */

@@ -9,6 +9,7 @@
 namespace cckakhandki\BehatHTMLFormatter\Classes;
 
 
+use Behat\Behat\Tester\Result\SkippedStepResult;
 class Feature
 {
     //<editor-fold desc="Variables">
@@ -19,6 +20,7 @@ class Feature
     private $file;
     private $screenshotFolder;
     private $failedScenarios = 0;
+    private $skippedScenarios = 0;
     private $passedScenarios = 0;
     private $scenarioCounter = 1;
 
@@ -157,7 +159,20 @@ class Feature
     {
         $this->failedScenarios++;
     }
+    
+    public function addSkippedScenario($number = 1)
+    {
+    	$this->skippedScenarios++;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getSkippedScenarios()
+    {
+    	return $this->skippedScenarios;
+    }
+    
     /**
      * @return mixed
      */
@@ -200,7 +215,7 @@ class Feature
     //<editor-fold desc="Function">
     public function allPassed()
     {
-        if ($this->failedScenarios == 0) {
+        if ($this->failedScenarios == 0 && $this->skippedScenarios == 0) {
             return true;
         }
         return false;
@@ -210,6 +225,8 @@ class Feature
     {
         if ($this->allPassed()) {
             return "passed";
+        } elseif ($this->skippedScenarios > 0){
+        	return "skipped";
         }
         return "failed";
     }

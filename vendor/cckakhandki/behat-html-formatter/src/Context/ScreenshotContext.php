@@ -34,7 +34,6 @@ class ScreenshotContext implements SnippetAcceptingContext {
         $this->text_color = $text_color;
         $this->x = $x;
         $this->y = $y;
-        var_dump($x . PHP_EOL . $y);
     }
     
     /**
